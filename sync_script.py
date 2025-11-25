@@ -35,6 +35,9 @@ from typing import List, Dict
 import pytz
 import requests
 from icalendar import Calendar, Event
+import urllib3
+from urllib3.exceptions import InsecureRequestWarning
+urllib3.disable_warnings(InsecureRequestWarning)
 
 
 # Timezone for all events. Modify if needed.
@@ -128,6 +131,8 @@ def write_calendar(calendar: Calendar, path: str) -> None:
 
 def main() -> None:
     session = requests.Session()
+    # ne pas verifier les certificats SSL
+    session.verify = False
     # Attempt login and fetch events
     login(session)
     events = fetch_events(session)
