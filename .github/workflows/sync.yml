@@ -26,7 +26,9 @@ jobs:
 
       - name: Install dependencies
         run:
+          # Mettre à jour pip
           python -m pip install --upgrade pip
+          # Installer les dépendances
           pip install requests icalendar pytz
 
       - name: Run synchronisation script
