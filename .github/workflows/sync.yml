@@ -25,7 +25,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run:
+        run: |
           # Mettre à jour pip
           python -m pip install --upgrade pip
           # Installer les dépendances
