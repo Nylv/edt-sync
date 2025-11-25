@@ -14,7 +14,7 @@ You must supply the following environment variables:
     GitHub Action, these should be stored as repository secrets (for example
     ENT_USERNAME and ENT_PASSWORD) and mapped via the workflow file.
   - LOGIN_URL: the URL for the login form of your school's ENT.
-  - PLANNING_URL: the URL of the planning page (e.g. `faces/Planning.xhtml`).
+  - ENT_EVENTS_URL: the URL of the planning page (e.g. `faces/Planning.xhtml`).
     The script uses this page to extract the dynamic `ViewState` token and
     to send an AJAX POST that returns event data. You may need to adapt the
     `fetch_events` function if your ENT uses different parameters.
@@ -44,9 +44,9 @@ TIMEZONE = pytz.timezone("Europe/Paris")
 USERNAME = os.getenv("USERNAME")
 PASSWORD = os.getenv("PASSWORD")
 LOGIN_URL = os.getenv("LOGIN_URL", "")
-# PLANNING_URL points to the Planning.xhtml page. It is used to both
+# ENT_EVENTS_URL points to the Planning.xhtml page. It is used to both
 # retrieve the ViewState token and perform the AJAX POST to fetch events.
-PLANNING_URL = os.getenv("ENT_EVENTS_URL", "")
+ENT_EVENTS_URL = os.getenv("ENT_EVENTS_URL", "")
 
 def login(session: requests.Session) -> None:
     """Authenticate to the portal. Raises an exception if login fails."""
@@ -77,11 +77,11 @@ def fetch_events(session: requests.Session) -> List[Dict]:
     3. Send the POST with appropriate headers and parse the JSON embedded in the XML response.
     4. Return a list of event dicts with parsed datetime objects.
     """
-    if not PLANNING_URL:
-        raise ValueError("PLANNING_URL environment variable must be set.")
+    if not ENT_EVENTS_URL:
+        raise ValueError("ENT_EVENTS_URL environment variable must be set.")
 
     # Step 1: retrieve the planning page to get the ViewState token
-    resp = session.get(PLANNING_URL)
+    resp = session.get(ENT_EVENTS_URL)
     resp.raise_for_status()
     viewstate = _extract_viewstate(resp.text)
 
@@ -123,7 +123,7 @@ def fetch_events(session: requests.Session) -> List[Dict]:
     }
 
     # Step 2: perform the AJAX POST to retrieve the planning data
-    post_resp = session.post(PLANNING_URL, data=payload, headers=headers)
+    post_resp = session.post(ENT_EVENTS_URL, data=payload, headers=headers)
     post_resp.raise_for_status()
 
     # Step 3: extract the JSON from the response. The server returns a partial JSF
