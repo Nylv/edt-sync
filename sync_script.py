@@ -46,7 +46,7 @@ PASSWORD = os.getenv("PASSWORD")
 LOGIN_URL = os.getenv("LOGIN_URL", "")
 # PLANNING_URL points to the Planning.xhtml page. It is used to both
 # retrieve the ViewState token and perform the AJAX POST to fetch events.
-PLANNING_URL = os.getenv("PLANNING_URL", "")
+PLANNING_URL = os.getenv("ENT_EVENTS_URL", "")
 
 def login(session: requests.Session) -> None:
     """Authenticate to the portal. Raises an exception if login fails."""
